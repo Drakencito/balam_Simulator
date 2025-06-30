@@ -1,0 +1,175 @@
+/* src/LoanSimulator.css */
+
+/* --- PALETA DE COLORES - JAGUAR (NARANJA Y AZUL MARINO) --- */
+:root {
+    --primary-color: #e58900;     /* Naranja/Ocre del Jaguar */
+    --secondary-color: #0d2c4b;    /* Azul Marino */
+    --background-color: #f7f5f2;  /* Fondo Hueso/Crema claro */
+    --card-background: #ffffff;
+    --text-color: #0d2c4b;        /* Texto principal en Azul Marino */
+    --muted-text-color: #5c6a78;   /* Un tono de azul/gris más suave */
+    --border-color: #e8e5e1;
+    --success-color: #28a745;      /* Un verde para la aprobación */
+    --status-paid-bg: #e7eaf0;
+    --status-paid-text: var(--secondary-color);
+    --status-pending-bg: #fff4e6;
+    --status-pending-text: #b36200;
+  }
+  
+  body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--background-color);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem;
+      box-sizing: border-box;
+  }
+  
+  /* --- ESTILOS DE LA TARJETA Y HEADER --- */
+  .simulator-card {
+      background-color: var(--card-background);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(13, 44, 75, 0.1);
+      width: 100%;
+      max-width: 550px;
+      text-align: center; /* Centrar el contenido de los nuevos pasos */
+  }
+  .app-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; text-align: center; }
+  .app-logo { width: 70px; height: auto; margin-bottom: 0.5rem; }
+  .app-header h1 { color: var(--text-color); font-weight: 700; margin: 0; }
+  
+  /* --- ESTILOS DEL FORMULARIO Y SLIDERS --- */
+  .card-body { text-align: left; }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-color); font-weight: 500; }
+  .input-group { position: relative; display: flex; align-items: center; }
+  .input-icon { position: absolute; left: 15px; color: var(--muted-text-color); }
+  .input-group input[type="number"] { width: 100%; padding: 12px 12px 12px 40px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: #fdfdfd; color: var(--text-color); }
+  .input-group input[type="number"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(229, 137, 0, 0.2); }
+  .slider { -webkit-appearance: none; width: 100%; height: 6px; background: #e9ecef; border-radius: 5px; outline: none; margin-top: 1rem; }
+  .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
+  .slider::-moz-range-thumb { width: 20px; height: 20px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
+  
+  /* --- BOTONES --- */
+  .calculate-btn { width: 100%; padding: 15px; background: linear-gradient(45deg, var(--primary-color), #ffab40); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(229, 137, 0, 0.3); }
+  .calculate-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(229, 137, 0, 0.4); }
+  .calculate-btn:disabled { background: #ffcda1; cursor: not-allowed; }
+  .link-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; text-decoration: underline; margin-top: 1rem; font-size: 0.9rem; }
+  
+  /* --- NUEVOS ESTILOS PARA EL FLUJO --- */
+  .confirmation-container h3, .processing-container h3, .approved-container h3 {
+      color: var(--text-color);
+      margin-bottom: 1.5rem;
+  }
+  .confirmation-details { text-align: left; background-color: #fdfaf5; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .confirmation-details .detail-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color); }
+  .confirmation-details .detail-item:last-child { border-bottom: none; }
+  .confirmation-details .detail-item span { color: var(--muted-text-color); }
+  .confirmation-details .detail-item strong { color: var(--text-color); }
+  .confirmation-details .monthly-payment-summary strong { color: var(--primary-color); font-size: 1.2rem; }
+  
+  /* PROCESANDO */
+  .processing-container { padding: 2rem 0; }
+  .processing-container p { color: var(--muted-text-color); }
+  .progress-bar-container { width: 100%; background-color: #e0e0e0; border-radius: 10px; overflow: hidden; margin-top: 2rem; }
+  .progress-bar { width: 100%; height: 10px; background-color: var(--primary-color); border-radius: 10px; animation: processing-animation 3s linear forwards; }
+  @keyframes processing-animation {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(0); }
+  }
+  
+  /* APROBADO */
+  .approved-container { padding: 2rem 0; }
+  .approved-icon { font-size: 4rem; color: var(--success-color); animation: approved-pop 0.5s ease-out; }
+  @keyframes approved-pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  /* ÁREA DE RESULTADOS Y TABLA */
+  .results-area { text-align: left; }
+  .schedule-container { margin-top: 2rem; }
+  .schedule-container h3 { text-align: center; color: var(--text-color); margin-bottom: 1rem; }
+  .schedule-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .schedule-table th, .schedule-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+  .schedule-table th { background-color: #f8f9fa; color: var(--muted-text-color); font-weight: 500; }
+  .schedule-table tbody tr:last-child td { border-bottom: none; }
+  .schedule-table tbody tr.paid-row { background-color: var(--status-paid-bg); color: var(--muted-text-color); text-decoration: line-through; }
+  .schedule-table tbody tr.paid-row td { opacity: 0.7; }
+  .status-badge { padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 0.8rem; }
+  .status-Pagado { background-color: var(--status-paid-bg); color: var(--status-paid-text); }
+  .status-Pendiente { background-color: var(--status-pending-bg); color: var(--status-pending-text); }
+  .pay-btn { background-color: var(--secondary-color); color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; transition: background-color 0.2s; }
+  .pay-btn:hover:not(:disabled) { background-color: #071e36; }
+  .pay-btn:disabled { background-color: #a7b3bf; cursor: not-allowed; }
+  
+  .error-message { color: #c93429; text-align: center; margin-top: 1rem; background-color: #fbeae9; padding: 10px; border-radius: 8px; }
+
+  .form-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 2rem 0;
+}
+
+/* Encabezado con información del usuario en la pantalla final */
+.user-info-header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.user-info-header p {
+    margin: 0;
+    color: var(--muted-text-color);
+    font-size: 0.9rem;
+}
+
+.user-info-header h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.5rem;
+}
+
+/* Resumen de la deuda total */
+.debt-summary {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 15px rgba(13, 44, 75, 0.2);
+}
+
+.debt-summary span {
+    display: block;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.debt-summary strong {
+    display: block;
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+/* Estilos para el campo de texto */
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fdfdfd;
+    color: var(--text-color);
+}
+
+.input-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(229, 137, 0, 0.2);
+}
