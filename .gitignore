@@ -1,0 +1,14 @@
+# Ignorar dependencias de Node
+frontend/node_modules
+frontend/build
+.pnp
+.pnp.js
+
+# Ignorar archivos de caché de Python
+backend/__pycache__
+backend/venv
+backend/*.pyc
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
