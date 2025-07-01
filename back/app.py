@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import random
@@ -5,13 +7,14 @@ import random
 app = Flask(__name__)
 CORS(app)
 
+# --- LÓGICA PARA INTERÉS FIJO (sin cambios) ---
 def calculate_fixed_loan(P, term_years):
     if term_years <= 3:
-        annual_rate_decimal = 0.16  
+        annual_rate_decimal = 0.16
     elif term_years <= 6:
-        annual_rate_decimal = 0.18  
+        annual_rate_decimal = 0.18
     else:
-        annual_rate_decimal = 0.20  
+        annual_rate_decimal = 0.20
 
     i = annual_rate_decimal / 12
     n = term_years * 12
@@ -55,6 +58,7 @@ def calculate_fixed_loan(P, term_years):
         'rateType': f'Fijo ({annual_rate_decimal:.1%})'
     }
 
+# --- LÓGICA DE INTERÉS VARIABLE CON INCREMENTO GARANTIZADO ---
 def calculate_variable_loan(P, term_years, fixed_period_months):
     TIIE_BASE = 0.083
     BANK_MARGIN = 0.05
@@ -79,15 +83,20 @@ def calculate_variable_loan(P, term_years, fixed_period_months):
     
     for period in range(1, int(n) + 1):
         if period <= fixed_periods:
-        
             monthly_rate = fixed_monthly_rate
             monthly_payment = fixed_monthly_payment
         else:
-         
             current_year_in_variable = ((period - fixed_periods - 1) // 12) + 1
-            simulated_fluctuation = (random.random() - 0.5) * 0.01
-            current_annual_rate = TIIE_BASE + BANK_MARGIN + (simulated_fluctuation * current_year_in_variable)
+            
+            # --- CAMBIO CLAVE: Se garantiza un incremento progresivo ---
+            # Cada año, la tasa sube un porcentaje base más una pequeña variación aleatoria.
+            base_increase = 0.002 # Aumento base de 0.2% por año
+            random_increase = random.random() * 0.003 # Pequeña variación extra de hasta 0.3%
+            
+            total_increase = (base_increase + random_increase) * current_year_in_variable
+            current_annual_rate = initial_annual_rate + total_increase
             monthly_rate = current_annual_rate / 12
+
             remaining_periods = n - period + 1
             if monthly_rate > 0:
                 factor_variable = (1 + monthly_rate) ** remaining_periods

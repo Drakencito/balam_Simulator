@@ -1,17 +1,17 @@
 :root {
-    --primary-color: #e58900;
-    --secondary-color: #0d2c4b;
-    --background-color: #f7f5f2;
-    --card-background: #ffffff;
-    --text-color: #0d2c4b;
-    --muted-text-color: #5c6a78;
-    --border-color: #e8e5e1;
-    --success-color: #28a745;
-    --status-paid-bg: #e7eaf0;
-    --status-paid-text: var(--secondary-color);
-    --status-pending-bg: #fff4e6;
-    --status-pending-text: #b36200;
-  }
+  --primary-color: #e58900;
+  --secondary-color: #0d2c4b;
+  --background-color: #f0e9dd; 
+  --card-background: #ffffff;
+  --text-color: #0d2c4b;
+  --muted-text-color: #5c6a78;
+  --border-color: #dcd5c9;      
+  --success-color: #28a745;
+  --status-paid-bg: #e7eaf0;
+  --status-paid-text: var(--secondary-color);
+  --status-pending-bg: #fff4e6;
+  --status-pending-text: #b36200;
+}
   
   body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

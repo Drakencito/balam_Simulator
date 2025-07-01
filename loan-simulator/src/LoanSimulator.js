@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FaDollarSign, FaPercentage, FaCalendarAlt, FaUser, FaPiggyBank, FaCheckCircle, FaInfoCircle, FaRegCalendarCheck } from 'react-icons/fa';
 import './LoanSimulator.css';
-import logoBalam from './img/balam.png';
+import logoBalam from './img/logo-balam.png';
 
 const LoanSimulator = () => {
     const [fullName, setFullName] = useState('');
@@ -12,7 +12,6 @@ const LoanSimulator = () => {
     const [interestType, setInterestType] = useState('fijo');
     const [fixedPeriodMonths, setFixedPeriodMonths] = useState(12);
     const [paymentDay, setPaymentDay] = useState(6);
-
     const [step, setStep] = useState('form');
     const [results, setResults] = useState(null);
     const [schedule, setSchedule] = useState([]);
@@ -26,6 +25,11 @@ const LoanSimulator = () => {
 
         if (!fullName || !accountNumber || !loanAmount || !loanTermYears || !paymentDay) {
             setError('Todos los campos son obligatorios.');
+            return;
+        }
+        
+        if (accountNumber.length < 10 || accountNumber.length > 18) {
+            setError('El número de cuenta o CLABE debe tener entre 10 y 18 dígitos.');
             return;
         }
 
@@ -63,7 +67,7 @@ const LoanSimulator = () => {
             setTimeout(() => {
                 const initialSchedule = results.amortizationTable.map(row => ({ ...row, status: 'Pendiente' }));
                 setSchedule(initialSchedule);
-                setRemainingBalance(parseFloat(loanAmount));
+                setRemainingBalance(results.totalPayment);
                 setStep('plan');
             }, 1500);
         }, 3000);
@@ -78,7 +82,8 @@ const LoanSimulator = () => {
         const newSchedule = [...schedule];
         const paymentMade = newSchedule[indexToPay];
         paymentMade.status = 'Pagado';
-        setRemainingBalance(prevBalance => prevBalance - paymentMade.principal);
+        
+        setRemainingBalance(prevBalance => prevBalance - paymentMade.payment);
         setSchedule(newSchedule);
     };
 
@@ -88,7 +93,13 @@ const LoanSimulator = () => {
         return paymentDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
     };
 
-    const formatCurrency = (value) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
+    const formatCurrency = (value) => {
+        const numberValue = Number(value);
+        if (Math.abs(numberValue) < 0.01) {
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(0);
+        }
+        return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
+    }
 
     const renderStep = () => {
         switch (step) {
@@ -99,6 +110,7 @@ const LoanSimulator = () => {
                         <div className="summary-details confirmation-details">
                             <div className="detail-item"><span>Tipo de Tasa:</span><strong>{results.rateType}</strong></div>
                             <div className="detail-item"><span>Monto Solicitado:</span><strong>{formatCurrency(loanAmount)}</strong></div>
+                            <div className="detail-item"><span>Monto Total a Pagar:</span><strong>{formatCurrency(results.totalPayment)}</strong></div>
                             <div className="detail-item"><span>Plazo:</span><strong>{loanTermYears} años</strong></div>
                             <div className="detail-item"><span>A nombre de:</span><strong>{fullName}</strong></div>
                             <div className="detail-item monthly-payment-summary">
@@ -205,7 +217,7 @@ const LoanSimulator = () => {
                                 </div>
                                 <div className="info-box small-info-box">
                                     <FaInfoCircle />
-                                    <span>Tu tasa será fija durante estos meses. Después, se ajustará anualmente según la tasa de referencia (TIIE), por lo que tu pago mensual podría subir o bajar.</span>
+                                    <span>Tu tasa será fija durante estos meses. Después, se ajustará anualmente según la tasa de referencia (TIIE), por lo que tu pago mensual podría subir.</span>
                                 </div>
                             </div>
                         )}
